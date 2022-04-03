@@ -1,6 +1,4 @@
-import { writable } from "svelte/store";
-
-const messageStore = writable("");
+import { messages } from "./store.js";
 
 const ws = new WebSocket("ws://localhost:9000/ws");
 
@@ -9,7 +7,10 @@ ws.addEventListener("open", function (event) {
 });
 
 ws.addEventListener("message", function (event) {
-  messageStore.set(event.data);
+  messages.update((msgs) => {
+    if (Array.isArray(event.data)) return [...msgs, ...event.data];
+    return [...msgs, event.data];
+  });
 });
 
 ws.addEventListener("close", function (event) {
@@ -27,6 +28,5 @@ const sendMessage = (message) => {
 };
 
 export default {
-  subscribe: messageStore.subscribe,
   sendMessage,
 };

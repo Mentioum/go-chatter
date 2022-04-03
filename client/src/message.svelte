@@ -1,6 +1,4 @@
 <script>
-  export let body;
-  export let sender;
   export let message;
 </script>
 
